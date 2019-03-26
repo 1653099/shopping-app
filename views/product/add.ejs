@@ -1,0 +1,88 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">products</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="nav-item">
+        <a class="btn btn-primary nav-link" href="/admin/manage_product/new_import_form" style="color: white;"><i class="fas fa-chevron-left"></i>
+            Quay Lại</a>
+    </div>
+    <div class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-plus-square"></i>
+            Nhập sản phẩm mới
+        </a>
+    </div>
+</nav>
+
+<br>
+
+<div class="container">
+    <form action="/admin/manage_product/add" method="POST" enctype="multipart/form-data">
+
+        <div class="form-group">
+            <label for="">Tên</label>
+            <input type="text" class="form-control" name="title" placeholder="Nhập tên sản phẩm" id="title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="">Mô tả</label>
+            <textarea type="text" class="form-control" name="desc" placeholder="Mô tả" rows="5" id="desc"></textarea>
+        </div>
+
+        <!-- category -->
+        <div class="form-group">
+            <label for="">Danh mục</label>
+            <select name="category" id="category" class="form-control">
+                <% categories.forEach(category => { %>
+                <option value="<%= category._id %>">
+                    <%= category.title %>
+                </option>
+                <% }) %>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="">Giá</label>
+            <input type="number" class="form-control" name="price" id="price" placeholder="Nhập giá sản phẩm" min="1" required>
+        </div>
+
+        <div class="form-group">
+            <label for="">Số lượng</label>
+            <input type="number" class="form-control" name="quantity" id="quantity" placeholder="Nhập số lượng sản phẩm" min="1" required>
+        </div>
+
+        <div class="form-group">
+            <label for="">Ảnh</label>
+            <input type="file" accept="image/*" class="form-control" name="image" id="img">
+            <br>
+            <img src="#" id="imgPreview" alt="no img">
+        </div>
+
+        <div id="images"></div>
+
+        <button type="submit" class="btn btn-primary btn-block">Nhập</button>
+
+    </form>
+
+    <br><br>
+    <h5>GALLERY</h5>
+    <hr>
+    
+    <div class="row" id="gallery"></div>
+    
+    <hr>
+    
+    <form action="/admin/manage_product/gallery" method="POST" class="dropzone" enctype="multipart/form-data" id="dropzoneForm">
+        <div class="fallback">
+            <input name="file" type="file" multiple />
+            <input type="submit" value="Upload">
+        </div>
+    </form>
+
+    <link rel="stylesheet" href="/css/basic.css">
+    <link rel="stylesheet" href="/css/dropzone.css">
+    <script src="/js/dropzone.js"></script>
+    <script src="/js/add_product.js"></script>
+</div>
+
+<% include ../partials/adminfooter %>

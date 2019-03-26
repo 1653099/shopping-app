@@ -1,0 +1,18 @@
+<div class="container mb-5">
+    <nav class="navbar navbar-expand-lg cate-nav"  style="padding:20px;">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <div class="mr-auto">
+                    <a href="/" class="cate-text cate-item">Home</a>
+                </div>
+            </li>
+            <% navCategory.forEach(c => { %>
+                <li class="nav-item">
+                    <div class="mr-auto verticalLine">
+                        <a href="/category/<%= c._id %>" class="cate-text cate-item"><%= c.title %></a>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+    </nav>
+</div>

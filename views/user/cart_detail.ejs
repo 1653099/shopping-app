@@ -1,0 +1,108 @@
+<% include ../partials/header %>
+
+<% include ../partials/category_nav %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="info-header"> <i class="fas fa-user"></i> Tài khoản</td>
+                </tr>
+                <tr>
+                    <td><a href="/info">Thông tin tài khoản</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/changepassword">Đổi mật khẩu</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/edit">Sửa thông tin tài khoản</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/cart">Quản lý đơn hàng</a></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-9">
+            <h3>Chi tiết đơn hàng</h3>
+            <hr>
+            <div class="row">
+                <table class="table table-bordered">
+                    <table class="table table-bordered table-hover">
+                        <tbody>
+                            <tr>
+                                <th scope="row" colspan="2">Chi tiết đơn nhập mua hàng</th>
+                            </tr>
+                            <tr>
+                                <th class="nonwrap">Ngày tạo</th>
+                                <td>
+                                    <%= formatDate(myCart._id) %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="nonwrap">Ngày giao</th>
+                                <td>
+                                    <%= formatDate(myCart.deliveryDate) %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="nonwrap">Tình trạng</th>
+                                <td>
+                                    <%= myCart.status %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="nonwrap">Hình thức thanh toán</th>
+                                <td>
+                                    <% if (myCart.payment == 0) { %>
+                                    Thu tiền khi nhận hàng
+                                    <% } else { %>
+                                    Chuyển khoản ngân hàng
+                                    <% } %>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </table>
+            </div>
+            <div class="row">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <th scope="col">Tên sản phẩm</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đơn giá</th>
+                        <th scope="col">Tổng cộng</th>
+                    </thead>
+                    <tbody>
+                        <% myCart.listItems.forEach(product => { %>
+                        <tr>
+                            <td>
+                                <a href="/product/<%= product.id %>"><%= product.title %></a>
+                            </td>
+                            <td>
+                                <%= product.quantity %>
+                            </td>
+                            <td>
+                                <%= formatPrice(product.price) %>
+                            </td>
+                            <td>
+                                <%= formatPrice(product.quantity * product.price) %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <th>Tổng tiền</th>
+                            <td>
+                                <%= formatPrice(myCart.totalPrice) %>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>

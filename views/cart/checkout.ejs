@@ -1,0 +1,172 @@
+<% include ../partials/header %>
+
+<% include ../partials/category_nav %>
+
+<div class="container">
+    <div class="alert alert-danger d-none" id="alert">
+        Bạn không được bỏ trống các trường có dấu "*"
+    </div>
+</div>
+
+<% if (typeof cart === "undefined" || cart.length === 0) { %>
+<div class="container">
+    <h5>Giỏ hàng trống!</h5>
+</div>
+<% } else { %>
+<div class="container" id="content">
+    <h3 style="color:#353942;">Thanh Toán</h3>
+    <hr>
+    <% if (!currentUser) { %>
+    <div class="well-box">
+        <h5>Nếu bạn đã có tài khoản vui lòng bấm vào <a href="/login">đây!</a></h5>
+    </div>
+    <h3>Thanh toán nhanh</h3>
+    <hr>
+    <% } %>
+    <form action="/cart/checkout" method="POST" id="information-form">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="infor-header">
+                Thông tin thanh toán
+            </div>
+            <!-- <form action="/checkout" method="POST" id="information-form"> -->
+                <div class="form-group">
+                    <label for="fullname"><span style="color:red;">*</span> Họ tên</label>
+                    <input class="form-control" type="text" name="fullName" id="fullName" placeholder="Họ tên" value="<%=data.fullName%>" required>
+                </div>
+                <div class="form-group">
+                    <label for="email"><span style="color:red;">*</span> E-Mail</label>
+                    <input class="form-control" type="email" name="email" id="email" placeholder="E-Mail" value="<%=data.email%>" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber"><span style="color:red;">*</span> Số điện thoại</label>
+                    <input class="form-control" type="tel" name="phoneNumber" id="phoneNumber" placeholder="Số điện thoại" value="<%=data.phoneNumber%>" required>
+                </div>
+                <div class="form-group">
+                    <label for="address"><span style="color:red;">*</span> Địa chỉ</label>
+                    <input class="form-control" type="text" name="address" id="address" placeholder="Địa chỉ" value="<%=data.address%>" required>
+                </div>
+                <div class="infor-header">
+                    Hình thức thanh toán
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <label class="form-check-label mb-2" for="radio1">
+                            <input type="radio" class="form-check-input" id="radio1" name="payment" value="0" checked>Thu tiền khi giao hàng
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="payment" value="1">Chuyển khoản ngân hàng
+                        </label>
+                    </div>
+                </div>
+            <!-- </form> -->
+           
+        </div>
+        <div class="col-md-8">
+            <table class="table table-bordered">
+                <thead>
+                    <th scope="col">Hình</th>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Đơn giá</th>
+                    <th scope="col">Tổng cộng</th>
+                </thead>
+                <tbody>
+                    <% let totalQuantity = 0; %>
+                    <% let totalPrice = 0; %>
+                    <% cart.forEach(item => { %>
+                    <% totalQuantity += item.quantity %>
+                    <% totalPrice += item.price*item.quantity %>
+                    <tr>
+                        <td>
+                            <img src="<%= item.image %>" class="img-in-cart" alt="no img">
+                        </td>
+                        <td>
+                            <%= item.title %>
+                        </td>
+                        <td>
+                            <%= item.quantity %>
+                        </td>
+                        <td>
+                            <%= formatPrice(item.price) %>
+                        </td>
+                        <td>
+                            <%= formatPrice(item.price*item.quantity) %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                    <input type="hidden" name="totalPrice" id="totalPrice" value="<%= totalPrice %>">
+                    <input type="hidden" name="totalQuantity" id="totalQuantity" value="<%= totalQuantity %>">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <th class="text-left">Tổng tiền</th>
+                        <td>
+                            <%= formatPrice(totalPrice) %>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="infor-header">
+                Thêm ghi chú cho đơn hàng của bạn
+            </div>
+            <textarea name="comment" id="comment" rows="8" class="form-control"></textarea>
+        </div>
+    </div>
+    <hr>
+    <div class="row justify-content-end">
+        <button class="btn btn-warning float-right mr-3" id="confirm-payment">Xác nhận đơn hàng</button>
+    </div>
+</div>
+</form>
+
+<% } %>
+
+<script>
+    var $form = $("#information-form");
+    function getFormData($form) {
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function (n, i) {
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+    
+    // $('#confirm-payment').on('click', (e) => {
+    //     if ($('#fullName').val() === '' || $('#email').val() === '' || $('#phoneNumber').val() === '' || $('#address').val() === '') {
+    //         $('#alert').removeClass('d-none');
+    //         window.scrollTo(0, 0);
+    //         return;
+    //     }
+
+    //     const baseUrl = document.location.origin;
+    //     let url = `${baseUrl}/cart/checkout`;
+    //     var $form = $("#information-form");
+    //     var data = getFormData($form);
+    //     data.payment = parseInt(data.payment);
+    //     data.comment = $('#comment').val();
+    //     data.totalQuantity = $('#totalQuantity').val();
+    //     data.totalPrice = $('#totalPrice').val();
+
+    //     $.ajax({
+    //         url,
+    //         data: JSON.stringify(data),
+    //         contentType: 'application/json',
+    //         type: 'POST',
+    //         success: function (res) {
+    //             console.log('ok');
+    //         }
+    //     });
+    //     // window.location.href = baseUrl;
+    //     $('#alert').addClass('d-none');
+    //     $('#content')[0].innerHTML = `<h4>Đơn hàng của bạn đang được xử lý!</h4>`;
+    // });
+</script>
+
+<% include ../partials/footer %>

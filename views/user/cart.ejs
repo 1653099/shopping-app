@@ -1,0 +1,62 @@
+<% include ../partials/header %>
+
+<% include ../partials/category_nav %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="info-header"> <i class="fas fa-user"></i> Tài khoản</td>
+                </tr>
+                <tr>
+                    <td><a href="/info">Thông tin tài khoản</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/changepassword">Đổi mật khẩu</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/edit">Sửa thông tin tài khoản</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/cart">Quản lý đơn hàng</a></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-9">
+            <h3>Quản lý đơn hàng</h3>
+            <hr>
+            <table class="table table-bordered">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Ngày đặt</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Ngày giao dự kiến</th>
+                    <th scope="col">Hàng động</th>
+                </thead>
+                <tbody>
+                    <% let i = 1 %>
+                    <% user.listCart.forEach(cart => { %>
+                        <tr>
+                            <td>
+                                <%= i++ %>
+                            </td>
+                            <td>
+                                <%= formatDate(cart._id) %>
+                            </td>
+                            <td>
+                                <%= cart.status %>
+                            </td>
+                            <td>
+                                <%= formatDate(cart.deliveryDate) %>
+                            </td>
+                            <td><a href="/info/cart/<%= cart._id %>" class="btn btn-warning">Chi tiết</a></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>

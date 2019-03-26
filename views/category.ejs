@@ -1,0 +1,70 @@
+<% include partials/header %>
+
+<div class="container mb-5">
+    <nav class="navbar navbar-expand-lg cate-nav" style="padding:20px;">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <div class="mr-auto">
+                    <a href="/" class="cate-text cate-item">Home</a>
+                </div>
+            </li>
+            <% navCategory.forEach(c => { %>
+            <% if (c._id == id) { %>
+            <li class="nav-item">
+                <div class="mr-auto verticalLine">
+                    <a href="/category/<%= c._id %>" class="cate-text cate-item active">
+                        <%= c.title %></a>
+                </div>
+            </li>
+            <% } else { %>
+            <li class="nav-item">
+                <div class="mr-auto verticalLine">
+                    <a href="/category/<%= c._id %>" class="cate-text cate-item">
+                        <%= c.title %></a>
+                </div>
+            </li>
+            <% } %>
+            <% }) %>
+        </ul>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="row">
+        <% products.forEach(product => { %>
+        <div class="col-sm-3 col-xs-6 d-inline-block">
+            <div class="product-block">
+                <div class="image">
+                    <div class="image-container">
+                        <a href="/product/<%=product._id%>">
+                            <img class="
+                                    img-product" src="/product_images/<%=product._id%>/<%=product.image%>"
+                                alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="product-meta">
+                    <h3 class="name">
+                        <a href="/product/<%=product._id%>"><%=product.title%></a>
+                    </h3>
+                    <div class="price">
+                        <span>
+                            <%=formatPrice(product.price)%></span>
+                    </div>
+                    <div class="cart">
+                        <div class="btn-group">
+                            <a href="/product/<%=product._id%>" class="btn btn-sm btn-outline-secondary">Mua ngay</a>
+                            <form action="/cart" method="POST">
+                                <input type="hidden" value="<%= product._id %>" name="id">
+                                <button class="btn btn-sm btn-outline-secondary">Thêm vào giỏ</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+</div>
+
+<% include partials/footer %>

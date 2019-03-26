@@ -1,0 +1,71 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">user</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="#">
+            <i class="fab fa-product-hunt"></i>
+            Quản lý tài khoản
+        </a>
+
+    </div>
+</nav>
+
+<div class="row justify-content-between">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form action="/admin/manage_user/" method="GET" class="mx-2 my-auto d-inline">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" id="search-user" placeholder="Tìm user">
+                <button class="btn btn-primary input-group-append"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên</th>
+                <th scope="col">Quyền hạn</th>
+                <!-- <th scope="col">Ban</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i = 0; i < users.length; i++) { %>
+            <% const e = users[i]; %>
+            <tr>
+            <th scope="row">
+                <%= i + 1 %>
+            </th>
+            <td>
+                <%= e.username %>
+            </td>
+            <td>
+                <form action="/admin/manage_user/change_type/<%=e._id%>?_method=PUT" method="POST" class="w-25">
+                    <div class="input-group">
+                        <select name="type" id="" class="xform-control">
+                            <% if (e.type === 2) { %>
+                                <option value="<%= 3 %>">Khách hàng</option>
+                                <option value="<%= 2 %>" selected>Nhân viên</option>
+                            <% } else { %>
+                                <option value="<%= 3 %>" selected>Khách hàng</option>
+                                <option value="<%= 2 %>">Nhân viên</option>
+                            <% } %>
+                        </select>
+                        <button class="btn btn-primary input-group-append"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </form>
+            </td>
+            <!-- <td><button class="btn btn-danger">Ban</button></td> -->
+            <% } %>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<% include ../partials/adminfooter %>

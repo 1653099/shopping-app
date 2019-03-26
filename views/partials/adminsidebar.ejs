@@ -1,0 +1,54 @@
+<!-- Sidebar -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3><i class="fas fa-wrench"></i> QUẢN LÝ</h3>
+    </div>
+
+    <ul class="list-unstyled components">
+        <% if (currentUser.type == 1) { %>
+        <h3 class="ml-4">ADMIN</h3>
+        <li id="page">
+            <a href="/admin"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        </li>
+        <li id="user">
+            <a href="/admin/manage_user"><i class="fas fa-users"></i> User</a>
+        </li>
+        <li id="categories">
+            <a href="/admin/manage_categories"><i class="fas fa-suitcase"></i> Danh mục</a>
+        </li>
+        <!-- <li id="revenue">
+            <a href="/admin/view_revenue">Doanh thu</a>
+        </li> -->
+        <% } else { %>
+        <p>Nhân viên:
+            <%= currentUser.username %>
+        </p>
+        <% } %>
+
+        <li id="product">
+            <a href="#productSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-suitcase"></i>
+                Sản phẩm</a>
+            <ul class="collapse list-unstyled" id="productSubmenu">
+                <li>
+                    <a href="/admin/manage_product">Tất cả</a>
+                </li>
+                <% navCategory.forEach(cate => { %>
+                    <li>
+                        <a href="/admin/manage_product?category=<%= cate._id %>"><%= cate.title %></a>
+                    </li>
+                <% }) %>
+            </ul>
+        </li>
+        <li id="carts">
+            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-suitcase"></i> Đơn hàng</a>
+            <ul class="collapse list-unstyled" id="pageSubmenu">
+                <li>
+                    <a href="/admin/manage_carts/new">Chưa xử lý</a>
+                </li>
+                <li>
+                    <a href="/admin/manage_carts/">Tất cả</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

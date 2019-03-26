@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shopping</title>
+    <link rel="icon" href="/images/icon.png">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/fontawesome-free-5.4.1-web/css/all.css">
+    <link rel="stylesheet" href="/css/easy-autocomplete.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/jquery-3.3.1.js"></script>
+</head>
+
+<body>
+    <% include partials/navbar %>
+
+    <div class="container">
+        <% include partials/alert %>
+    </div>
+
+    <div class="container mb-5">
+        <nav class="navbar navbar-expand-lg cate-nav" style="padding:20px;">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <div class="mr-auto">
+                        <a href="/" class="cate-text cate-item active">Home</a>
+                    </div>
+                </li>
+                <% navCategory.forEach(c => { %>
+                <li class="nav-item">
+                    <div class="mr-auto verticalLine">
+                        <a href="/category/<%= c._id %>" class="cate-text cate-item">
+                            <%= c.title %></a>
+                    </div>
+                </li>
+                <% }) %>
+            </ul>
+        </nav>
+    </div>
+
+
+    <div class="container">
+        <img class="mySlides" src="/images/banner-nou-1100x500.jpg">
+        <img class="mySlides" src="/images/banner-nou1-1100x500.jpg">
+        <img class="mySlides" src="/images/header-August2-01-1100x500.png">
+        <img class="mySlides" src="/images/winter-1100x500.png">
+
+        <br><br>
+        
+        <% let i = 0 %>
+        <% categories.forEach(category => { %>
+            <div class="box">
+                <input type="hidden" value="<%= category._id %>" id="id<%= i %>">
+                <div class="category-heading">
+                    <i class="fas fa-search-dollar d-inline mb-2"></i>
+                    <h4 class="ml-2 d-inline"><%= category.title %></h4>
+                    <hr>
+                </div>
+                <div class="tab-content" id="content<%= i++ %>"></div>
+            </div>
+        <% }); %>
+    </div>
+
+    <script src="/js/landing.js"></script>
+    <script src="/js/slideshow.js"></script>
+    <!-- <script src="/js/search.js"></script> -->
+    <% include partials/footer %>

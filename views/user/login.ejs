@@ -1,0 +1,28 @@
+<% include ../partials/header %>
+
+<% include ../partials/category_nav %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <h2>Đăng nhập</h2>
+            <hr>
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập</label>
+                    <input class="form-control" type="text" name="username" id="username" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input class="form-control" type="password" name="password" id="password" placeholder="">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+            </form>
+            <a href="/register" class="text-center" style="color: rgba(0,0,0,.5); font-weight: 600; display: block; margin-top: 50px;">Tạo tài khoản</a>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+    
+<% include ../partials/footer %>

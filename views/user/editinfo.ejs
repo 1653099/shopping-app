@@ -1,0 +1,48 @@
+<% include ../partials/header %>
+
+<% include ../partials/category_nav %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="info-header"> <i class="fas fa-user"></i> Tài khoản</td>
+                </tr>
+                <tr>
+                    <td><a href="/info">Thông tin tài khoản</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/changepassword">Đổi mật khẩu</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/edit">Sửa thông tin tài khoản</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/info/cart">Quản lý đơn hàng</a></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-9">
+            <h3>Sửa thông tin tài khoản</h3>
+            <hr>
+            <form action="/info/edit?_method=PUT" method="POST">
+                <div class="form-groups mb-3">
+                    <label for="fullName">Họ tên:</label>
+                    <input type="text" class="form-control w-25 mt-0" name="fullName" id="fullName" value="<%=currentUser.fullName%>">
+                </div>
+                <div class="form-groups mb-3">
+                    <label for="phoneNumber">Số điện thoại:</label>
+                    <input type="tel" class="form-control w-25 mt-0" name="phoneNumber" id="phoneNumber" value="<%=currentUser.phoneNumber%>" minlength="7">
+                </div>
+                <div class="form-groups mb-3">
+                    <label for="address">Địa chỉ:</label>
+                    <input type="text" class="form-control w-25 mt-0" name="address" id="address" value="<%=currentUser.address%>" minlength="7">
+                </div>
+                <button class="btn btn-warning">Xác nhận</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>

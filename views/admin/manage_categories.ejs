@@ -1,0 +1,80 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">categories</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="#">
+            <i class="fab fa-product-hunt"></i>
+            Quản lý danh mục
+        </a>
+
+        <form action="/admin/manage_categories" method="POST" class="mx-2 my-auto d-inline w-100">
+            <div class="input-group">
+                <input type="text" name="title" class="form-control" placeholder="Danh mục mới" required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary" style="color: white;"><i class="fas fa-plus"></i>
+                        Nhập Danh mục mới</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</nav>
+
+<div class="row">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên</th>
+                <th scope="col">Người thêm</th>
+                <th scope="col">Ngày thêm</th>
+                <th scope="col">Chỉnh sửa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% let i = 1 %>
+            <% categories.forEach(category => { %>
+            <tr>
+                <th scope="row">
+                    <%= i %>
+                </th>
+                <td>
+                    <div class="input-group">
+                        <input type="text" class="title" id="title<%=i%>" name="title" value="<%= category.title %>">
+                        <button class="btn btn-primary" id="save<%=i%>"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </td>
+                <td>
+                    <%= category.author.username %>
+                </td>
+                <td>
+                    <% let a       = new Date(ObjectID(category._id).getTimestamp()); %>
+                    <% let year    = a.getFullYear(); %>
+                    <% let date    = a.getDate(); %>
+                    <% let month   = a.getMonth() + 1; %>
+                    <% let hours   = a.getHours(); %>
+                    <% let minutes = a.getMinutes(); %>
+                    <% let seconds = a.getSeconds(); %>
+                    <% let time    = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}` %>
+                    <%= time %>
+                </td>
+                <td>
+                    <div class="row mx-auto">
+                        <!-- <button class="btn btn-success mx-1" id="edit">Sửa</button> -->
+                        <p class="d-none" id="id<%=i%>"><%= category._id %></p>
+                        <form action="/admin/manage_categories/<%= category._id %>?_method=DELETE" method="POST" class="mx-1">
+                            <button class="btn btn-danger">Xóa</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <% i++ %>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<script src="/js/manage_categories.js"></script>
+
+<% include ../partials/adminfooter %>

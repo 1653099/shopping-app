@@ -1,0 +1,134 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">carts</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="#">
+            <i class="fab fa-product-hunt"></i>
+            Quản lý đơn hàng
+        </a>
+
+    </div>
+</nav>
+<br>
+
+<div class="container">
+    <div class="row">
+        <table class="table table-bordered table-hover">
+            <tbody>
+                <tr>
+                    <th scope="row" colspan="2">Chi tiết đơn nhập mua hàng</th>
+                </tr>
+                <tr>
+                    <th class="nonwrap">Ngày tạo</th>
+                    <td>
+                        <%= formatDate(cart._id) %>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nonwrap">Ngày giao</th>
+                    <td>
+                        <%= formatDate(cart.deliveryDate) %>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nonwrap">Người mua</th>
+                    <td>
+                        <%= cart.fullName %>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nonwrap">Tình trạng</th>
+                    <td>
+                        <%= cart.status %>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nonwrap">E-Mail</th>
+                    <td>
+                        <%= cart.email %>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nonwrap">Địa chỉ</th>
+                    <td>
+                        <%= cart.address %>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nonwrap">Hình thức thanh toán</th>
+                    <td>
+                        <% if (cart.payment == 0) { %>
+                            Thu tiền khi nhận hàng
+                        <% } else { %>
+                            Chuyển khoản ngân hàng
+                        <% } %>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nonwrap">Lời nhắn</th>
+                    <td>
+                        <%= cart.comment %>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col">Tổng cộng</th>
+            </thead>
+            <tbody>
+                <% cart.listItems.forEach(product => { %>
+                <tr>
+                    <td>
+                        <%= product.title %>
+                    </td>
+                    <td>
+                        <%= product.quantity %>
+                    </td>
+                    <td>
+                        <%= formatPrice(product.price) %>
+                    </td>
+                    <td>
+                        <%= formatPrice(product.quantity * product.price) %>
+                    </td>
+                </tr>
+                <% }) %>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <th>Tổng tiền</th>
+                    <td>
+                        <%= formatPrice(cart.totalPrice) %>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <% if (cart.status === 'Đang xử lý') { %>
+    <hr>
+    <form action="/admin/manage_carts/<%= cart._id %>?_method=DELETE" method="POST">
+        <button class="btn btn-danger float-left">Hủy nhận đơn hàng</button>
+    </form>
+    <form action="/admin/manage_carts/<%= cart._id %>?_method=PUT" method="POST" class="float-right">
+        <div class="form-group">
+            <label for="del-date">Ngày giao dự kiến</label>
+            <input type="date" class="form-control" name="date" id="del-date">
+            <button class="btn btn-warning mt-4">Xác nhận đơn hàng</button>
+        </div>
+    </form>
+    <%} %>
+</div>
+
+<script>
+    document.getElementById("del-date").valueAsDate = new Date();
+</script>
+
+<% include ../partials/adminfooter %>

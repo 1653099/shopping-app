@@ -1,0 +1,88 @@
+<% include ../partials/header %>
+
+<% include ../partials/category_nav %>
+
+<% if (typeof cart === "undefined" || cart.length === 0) { %> 
+    <div class="container">
+        <h5>Giỏ hàng trống!</h5>
+    </div>
+<% } else { %>
+
+<div class="container">
+    <h3 style="color:#353942;">Giỏ Hàng</h3>
+    <hr>
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <th scope="col">Hình</th>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col">Tổng cộng</th>
+            </thead>
+            <tbody>
+                <% let totalQuantity = 0; %>
+                <% let totalPrice = 0; %>
+                <% cart.forEach(item => { %>
+                    <% totalQuantity += item.quantity %>
+                    <% totalPrice += item.price*item.quantity %>
+                    <tr>
+                        <td>
+                            <img src="<%= item.image %>" class="img-in-cart" alt="no img">
+                        </td>
+                        <td><%= item.title %></td>
+                        <td>
+                            <form action="/cart/<%= item.id %>?_method=PUT" method="POST" class="d-inline-block">
+                                <div class="input-group">
+                                    <input type="number" name="quantity" id="" value="<%= item.quantity %>" min="1" required>
+                                    <button class="btn btn-primary input-group-append"><i class="fas fa-sync-alt"></i></button>
+                                </div>
+                            </form>
+                            <form action="/cart/<%= item.id %>?_method=DELETE" method="POST" class="d-inline-block">
+                                <button class="btn btn-danger input-group-append"><i class="fas fa-times"></i></button>
+                            </form>
+                        </td>
+                        <td><%= formatPrice(item.price) %></td>
+                        <td><%= formatPrice(item.price*item.quantity) %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th class="text-right">Tổng số lượng</th>
+                        <td>
+                            <%= totalQuantity %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-right">Tổng giá</th>
+                        <td>
+                            <%=  formatPrice(totalPrice) %>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <div class="row justify-content-between">
+        <div class="col-md-4">
+            <a href="/" class="btn btn-outline-info">Tiếp tục mua hàng</a>
+        </div>
+        <div class="col-md-4">
+            <a href="/cart/checkout" class="btn btn-warning float-right">Thanh toán</a>
+        </div>
+    </div>
+</div>
+
+<% } %>
+
+<% include ../partials/footer %>

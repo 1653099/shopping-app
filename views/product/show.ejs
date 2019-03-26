@@ -1,0 +1,224 @@
+<% include ../partials/header %>
+
+<div class="container mb-5">
+    <nav class="navbar navbar-expand-lg cate-nav" style="padding:20px;">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <div class="mr-auto">
+                    <a href="/" class="cate-text cate-item">Home</a>
+                </div>
+            </li>
+            <% navCategory.forEach(c => { %>
+                <% if (c.title === product.category.title) { %>
+                    <li class="nav-item">
+                        <div class="mr-auto verticalLine">
+                            <a href="/category/<%= c._id %>" class="cate-text cate-item active">
+                                <%= c.title %></a>
+                        </div>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <div class="mr-auto verticalLine">
+                            <a href="/category/<%= c._id %>" class="cate-text cate-item">
+                                <%= c.title %></a>
+                        </div>
+                    </li>
+                <% } %>
+            <% }) %>
+        </ul>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 col-sm-12">
+            <img src="/product_images/<%=product.id%>/<%=product.image%>" class="product-preview-image" alt="no img">
+            <ul class="gallery">
+                <% galleryImages.forEach(function(image){ %>
+                <li>
+                    <a data-fancybox="gallery" href="/product_images/<%= product._id %>/gallery/<%= image %>">
+                        <img class="image-gallery-preview" src="/product_images/<%= product._id %>/gallery/<%= image %>" alt="">
+                    </a>
+                </li>
+                <% }); %>
+            </ul>
+        </div>
+        <div class="col-md-7 col-sm-12">
+            <h1><%= product.title %></h1>
+            <% if (product.quantity > 0) { %>
+                <h4>Tình trạng: <span style="color: green;">còn hàng</span></h4>
+            <% } else { %>
+                <h4>Tình trạng: <span style="color: red;">hết hàng</span></h4>
+            <% } %>
+            <br>
+            <h3 class="price mt-auto"><%= formatPrice(product.price) %></h3>
+            <br>
+            <form action="/cart" method="POST" class="mt-3">
+                <input type="hidden" value="<%= product._id %>" name="id">
+                <button class="btn btn-warning">
+                    <h3><i class="fas fa-cart-plus"></i> Thêm vào giỏ</h3>
+                </button>
+            </form>
+            <ul class="mt-4 nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Mô tả</a>
+                </li>
+            </ul>
+            <div class="tab-desc-content">
+                <div id="description">
+                    <%- product.desc %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="box">
+            <input type="hidden" value="<%= product.category._id %>" id="id">
+            <div class="category-heading">
+                <h4 class="ml-2 d-inline">
+                    <i class="fas fa-search-dollar d-inline mb-2"></i>
+                    Sản Phẩm Liên Quan
+                </h4>
+                <hr>
+            </div>
+            <div class="tab-content" id="content"></div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="category-heading">
+            <h4 class="ml-3 d-inline">
+                <i class="fas fa-comments"></i>
+                Phản hồi
+            </h4>
+        </div>
+    </div>
+    <hr>
+    <% for (let i = 0; i < 5; i++) { %>
+    <% const feedback = product.feedbacks[i]; %>
+    <% if (!feedback) { %>
+    <% break; %>
+    <% }%>
+    <div class="row">
+        <div class="feedback-box" id="fb-box<%=i%>">
+            <p>
+                <strong>
+                    <%= feedback.author.username %>: </strong>
+                <span id="fb-text<%=i%>"><%= feedback.text %></span>
+                <span class="time-feedback">
+                    <%= formatDate(feedback.id) %>
+                </span>
+            </p>
+        </div>
+        <% if ((currentUser && feedback.author.equals(currentUser._id)) || (currentUser && currentUser.type == 1)) { %>
+        <div class="edit-btn dropdown show">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="fas fa-ellipsis-h"></i>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <% if (feedback.author.equals(currentUser._id)) { %> 
+                <a class="dropdown-item" id="fb<%=i%>" onclick="editOnClick('<%= feedback.text %>', '<%=i%>', '<%=feedback._id%>')" >Sửa</a>
+                <% } %>
+                <a class="dropdown-item" href="#" onclick="deleteFeedback('<%=feedback._id%>')">Xóa</a>
+            </div>
+        </div>
+        <% } %>
+    </div>
+    <% } %>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <form action="/feedback" method="POST">
+                <input type="hidden" name="id" value="<%= product._id %>">
+                <textarea name="comment" id="comment" rows="2" class="form-control" required></textarea>
+                <button class="btn btn-warning float-right mt-2">Gửi phản hồi</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var formatPrice = (price) => {
+        let result = price + ',';
+        result = result.replace(/\d(?=(\d{3})+\,)/g, '$&.');
+        result = result.replace(',', '');
+        return result + ' VNĐ';
+    };   
+
+    $.get(`/category/products/${$(`#id`).val()}`, (data) => {
+        if (data == null) {
+            return;
+        }
+
+        let product_html = '';
+
+        $.each(data, (key, value) => {
+            let html =
+                `<div class="col-sm-3 col-xs-6 d-inline-block">
+                            <div class="product-block">
+                                <div class="image">
+                                    <div class="image-container">
+                                        <a href="/product/${value._id}"">
+                                            <img class="img-product" src="/product_images/${value._id}/${value.image}" alt="">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product-meta">
+                                    <h3 class="name">
+                                        <a href="/product/${value._id}">${value.title}</a>
+                                    </h3>
+                                    <div class="price">
+                                        <span>${formatPrice(value.price)}</span>
+                                    </div>
+                                    <div class="cart">
+                                        <div class="btn-group">
+                                            <a href="/product/${value._id}" class="btn btn-sm btn-outline-secondary">Mua ngay</a>
+                                            <form action="/cart" method="POST">
+                                            <input type="hidden" value="${value._id}" name="id">
+                                            <button class="btn btn-sm btn-outline-secondary">Thêm vào giỏ</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+            product_html += html;
+        });
+
+        $(`#content`)[0].innerHTML = product_html;
+    });    
+
+    function editOnClick(text, i, id) {
+        $(`#fb-box${i}`)[0].innerHTML = `
+            <form id="form-edit" action="/feedback/${id}?_method=PUT" method="POST">
+                <input type="text" name="text" class="edit-feedback" value="${text}" autofocus required>
+            </form>
+        `;
+    }
+
+    function deleteFeedback(id) {
+        const baseUrl = document.location.origin;
+        let url = `${baseUrl}/feedback/${id}?_method=DELETE`;
+
+        $.ajax({
+            url,
+            data: null,
+            contentType: 'application/json',
+            type: 'POST',
+            success: function (res) {
+                console.log('ok');
+            }
+        });
+
+        location.reload();
+    }  
+
+    $(document).keydown(function (e) {
+        if (e.keyCode == 27) {
+            location.reload();
+        }
+    });   
+</script>
+
+<% include ../partials/footer %>

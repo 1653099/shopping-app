@@ -1,0 +1,62 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">carts</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="#">
+            <i class="fab fa-product-hunt"></i>
+            Quản lý đơn hàng
+        </a>
+
+    </div>
+</nav>
+
+<div class="row justify-content-between">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form action="/admin/manage_carts/" method="GET" class="mx-2 my-auto d-inline">
+            <div class="input-group">
+                <select name="mode" id="mode-search">
+                    <option value="1" selected>Tên người đặt</option>
+                    <option value="2">ID</option>
+                </select>
+                <input type="text" name="search" class="form-control" id="search-cart" placeholder="Tìm đơn hàng">
+                <button class="btn btn-primary input-group-append"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Người đặt</th>
+            <th scope="col">Thời gian</th>
+            <th scope="col">Tình trạng</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% let i = 1; %>
+        <% carts.forEach(cart => { %>
+            <tr>
+                <th scope="row"><%= cart._id %></th>
+                <td class="">
+                    <%= cart.fullName %>
+                    <% if (cart.status === 'Đang xử lý') { %>
+                        <span class="new-product">new</span>
+                    <%} %>
+                </td>
+                <td><%= formatDate(cart._id) %></td>
+                <td><%= cart.status %></td>
+                <td><a href="/admin/manage_carts/<%= cart._id %>" class="btn btn-warning">Chi tiết</a></td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<% include ../partials/adminfooter %>

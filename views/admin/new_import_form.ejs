@@ -1,0 +1,138 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">products</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="nav-item">
+        <a class="btn btn-primary nav-link" href="/admin/manage_product" style="color: white;"><i class="fas fa-chevron-left"></i>
+            Quay Lại</a>
+    </div>
+    <div class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <a class="navbar-brand" href="#"><i class="fas fa-plus-square"></i> Đơn nhập hàng mới</a>
+    </div>
+</nav>
+
+<div class="row justify-content-between">
+    <div class="col-md-4">
+        <form action="/admin/manage_product/new_import_form" method="GET" class="mx-2 my-auto d-inline w-100">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" id="search-product" placeholder="Tìm sản phẩm">
+                <button class="btn btn-primary input-group-append"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Giá</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < products.length; i++) { %>
+                <% const e = products[i]; %>
+                    <p class="d-none" id="id<%=i%>"><%= e._id %></p>
+                    <tr class="product-body">
+                        <td id="title<%=i%>"><a href="/product/<%= e._id %>"><%= e.title %></a></td>
+                        <td><%= e.quantity %></td>
+                        <td id="price<%=i%>"><%= formatPrice(e.price) %></td>
+                        <td>
+                            <form action="/admin/manage_product/new_import_form/<%= e._id %>" method="POST">
+                                <input type="hidden" name="title" value="<%= e.title %>">
+                                <button class="btn btn-success" id="button<%=i%>">Thêm</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-7">
+        <a class="btn btn-primary mt-4 mb-4" href="/admin/manage_product/add" style="color: white;"><i class="fas fa-plus"></i>
+            Nhập sản phẩm mới</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Giá</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let i = 1 %>
+                <% let totalPrice = 0 %>
+                <% let totalQuantity = 0 %>
+                <% currentImportForm.forEach(product => { %>
+                    <tr>
+                        <th scope="col"><%= i++ %></th>
+                        <td>
+                            <a href="/product/<%= product._d %>"><%= product.title %></a>
+                            <span class="new-product">
+                                <% if (product.slug) { %>
+                                    new 
+                                <% } %>
+                            </span>
+                            <% totalPrice += product.quantity * product.price; %>
+                            <% totalQuantity += product.quantity * 1; %>
+                        </td>
+                        <td>
+                            <form action="/admin/manage_product/new_import_form/<%=product._id%>?_method=PUT" method="POST" class="d-inline-block">
+                                <div class="input-group">
+                                    <input type="number" name="quantity" id="" value="<%= product.quantity %>" min="1" required>
+                                    <button class="btn btn-primary input-group-append"><i class="fas fa-sync-alt"></i></button>
+                                </div>
+                            </form>
+                            <form action="/admin/manage_product/new_import_form/<%=product._id%>?_method=DELETE" method="POST" class="d-inline-block">
+                                <button class="btn btn-danger input-group-append"><i class="fas fa-times"></i></button>
+                            </form>
+                        </td>
+                        <td><%= product.price %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        <br>
+        <div class="row justify-content-between">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Tổng số lượng</th>
+                            <td>
+                                <%= totalQuantity %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tổng giá</th>
+                            <td>
+                                <%=  formatPrice(totalPrice) %>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div class="row justify-content-between">
+            <div class="col-md-4">
+                <form action="/admin/manage_product/new_import_form/delete?_method=DELETE" method="POST">
+                    <button class="btn btn-danger" id="delete-all">Xóa tất cả</button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form action="/admin/manage_product/new_import_form" method="POST">
+                    <input type="hidden" name="totalQuantity" value="<%= totalQuantity %>">
+                    <input type="hidden" name="totalPrice" value="<%= totalPrice %>">
+                    <button class="btn btn-primary float-right">Lưu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/new_import_form.js"></script>
+
+<% include ../partials/adminfooter %>

@@ -1,0 +1,13 @@
+<% include ../partials/header %>
+
+<% include ../partials/category_nav %>
+
+<% if (lastCartId) { %>
+    <div class="container">
+        <h4>Đơn hàng của bạn đang được xử lý</h4>
+        <h5>Mã đơn hàng của bạn là: <%= lastCartId %></h5>
+    </div>
+<% } %>
+
+
+<% include ../partials/footer %>

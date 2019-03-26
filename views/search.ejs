@@ -1,0 +1,49 @@
+<% include partials/header %>
+
+<% include partials/category_nav %>
+
+<div class="container">
+    <div class="alert alert-primary" role="alert">
+        từ khóa:
+        <%= query %>, số kết quả:
+        <%= products.length %>
+    </div>
+    <div class="row">
+        <% products.forEach(product => { %>
+        <div class="col-sm-3 col-xs-6 d-inline-block">
+            <div class="product-block">
+                <div class="image">
+                    <div class="image-container">
+                        <a href="/product/<%=product._id%>">
+                            <img class="
+                                            img-product" src="/product_images/<%=product._id%>/<%=product.image%>"
+                                alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="product-meta">
+                    <h3 class="name">
+                        <a href="/product/<%=product._id%>">
+                            <%=product.title%></a>
+                    </h3>
+                    <div class="price">
+                        <span>
+                            <%=formatPrice(product.price)%></span>
+                    </div>
+                    <div class="cart">
+                        <div class="btn-group">
+                            <a href="/product/<%=product._id%>" class="btn btn-sm btn-outline-secondary">Mua ngay</a>
+                            <form action="/cart" method="POST">
+                                <input type="hidden" value="<%= product._id %>" name="id">
+                                <button class="btn btn-sm btn-outline-secondary">Thêm vào giỏ</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+</div>
+
+<% include partials/footer %>

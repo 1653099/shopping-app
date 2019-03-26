@@ -1,0 +1,81 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">products</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="nav-item">
+        <a class="btn btn-primary nav-link" href="/admin/manage_product/view_history_import" style="color: white;"><i class="fas fa-chevron-left"></i>
+            Quay Lại</a>
+    </div>
+    <div class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <a class="navbar-brand" href="#"><i class="fas fa-plus-square"></i> Lịch sử nhập hàng</a>
+    </div>
+</nav>
+
+<br>
+
+<div class="container">
+    <div class="row">
+        <table class="table table-bordered table-hover">
+            <tbody>
+                <tr>
+                    <th scope="row" colspan="2">Chi tiết đơn nhập hàng</th>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <td>
+                        <%= form._id %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ngày tạo</th>
+                    <td>
+                        <%= formatDate(form._id) %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Người tạo</th>
+                    <td>
+                        <%= form.user.username %>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col">Tổng cộng</th>
+            </thead>
+            <tbody>
+                <% form.listProducts.forEach(product => { %>
+                <tr>
+                    <td>
+                        <a href="/product/<%= product._id %>"><%= product.title %></a>
+                    </td>
+                    <td>
+                        <%= product.quantity %>
+                    </td>
+                    <td>
+                        <%= formatPrice(product.price) %>
+                    </td>
+                    <td>
+                        <%= formatPrice(product.quantity * product.price) %>
+                    </td>
+                </tr>
+                <% }) %>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <th>Tổng tiền</th>
+                    <td><%= formatPrice(form.totalPrice) %></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<% include ../partials/adminfooter %>

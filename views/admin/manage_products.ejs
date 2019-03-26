@@ -1,0 +1,92 @@
+<% include ../partials/adminheader %>
+
+<div id="type" style="display: none;">products</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="#">
+            <i class="fab fa-product-hunt"></i>
+            Quản lý sẩn phẩm
+        </a>
+
+        <div class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <a class="btn btn-primary nav-link mr-3" href="/admin/manage_product/view_history_import" style="color: white;">
+                <i class="fas fa-backward"></i>
+                Lịch sử nhập hàng
+            </a>
+            <a class="btn btn-primary nav-link" href="/admin/manage_product/new_import_form" style="color: white;"><i class="fas fa-plus"></i>
+                Nhập lô hàng mới</a>
+        </div>
+    </div>
+</nav>
+<br>
+
+<div class="row justify-content-between">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form action="/admin/manage_product/<%= cate_id %>" method="GET" class="mx-2 my-auto d-inline">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" id="search-product" placeholder="Tìm sản phẩm">
+                <button class="btn btn-primary input-group-append"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+<div class="row justify-content-between">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Đơn giá</th>
+                    <th scope="col">Chỉnh sửa</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < products.length; i++) { %>
+                <% const e = products[i]; %>
+                <tr>
+                    <th scope="row">
+                        <%= i + 1 %>
+                    </th>
+                    <td id="title<%= i %>">
+                        <a href="/product/<%= e._id %>"><%= e.title %></a>
+                    </td>
+                    <td id="category<%= i %>">
+                        <%= e.category.title %>
+                        <p class="d-none" id="category_id<%=i%>"><%= e.category._id %></p>
+                    </td>
+                    <td id="quantity<%= i %>">
+                        <%= e.quantity %>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="number" name="price" value="<%= e.price %>" class="price" id="price<%= i %>" step="1000" required>
+                            <button type="button" class="btn btn-primary" id="save<%=i%>"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row mx-auto">
+                            <p class="d-none" id="id<%=i%>"><%= e._id %></p>
+                            <a href="/admin/manage_product/edit/<%= e._id %>" class="btn btn-success">Sửa</a>
+                            <form action="/admin/manage_product/<%= e._id %>?_method=DELETE" method="POST" class="mx-1">
+                                <button class="btn btn-danger">Xóa</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="/js/manage_products.js"></script>
+<script src="/js/new_import_form.js"></script>
+
+<% include ../partials/adminfooter %>
